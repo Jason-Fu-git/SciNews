@@ -3,6 +3,11 @@ from bs4 import BeautifulSoup
 import time
 from datetime import date, timedelta
 
+"""
+IT之家新闻列表获取
+作者：付甲申
+"""
+
 # 设置header
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 '
@@ -28,6 +33,7 @@ for i in range(len(url_ls)):
     time.sleep(1)
     print(f"#{i + 1}:", url_ls[i], response)  # 监测状态
 
+# 写到本地
 with open("../data/itHome_urls.txt", "w") as out_file:
     for link in links:
         if "https://www.ithome.com/" in str(link):

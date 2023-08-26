@@ -2,6 +2,11 @@ import requests
 import time
 import re
 
+"""
+新浪新闻列表获取
+作者：付甲申
+"""
+
 # 设置header
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 '
