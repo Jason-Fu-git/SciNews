@@ -93,9 +93,9 @@ for file_name in fs:
                     #  200 OK
                     elif response.status_code == 200:
                         # 保存图片并记下路径
-                        with open(f"../data/images/itHome/{file_name}_{img_index}.jpg", "wb") as img_file:
+                        with open(f"blog/static/blog/images/itHome/{file_name}_{img_index}.jpg", "wb") as img_file:
                             img_file.write(response.content)
-                        img_paths.append(f"../data/images/itHome/{file_name}_{img_index}.jpg")
+                        img_paths.append(f"blog/static/blog/images/itHome/{file_name}_{img_index}.jpg")
                         print(f"itHome_{file_name} 图片 {img_index} OK!")
                         img_index += 1
 

@@ -23,17 +23,20 @@ class Blog(models.Model):
     text = models.TextField(blank=True)  # 正文文字
 
     def __str__(self):
-        return f"{self.title}\n{self.url}\n{self.author_id}"
+        return f"{self.title} | {self.author_id}"
 
 
 class Image(models.Model):
     """
     图像模型，初始化时必须初始化的变量：
     blog - 关联的blog的id
-    image_path - 图像路径，为相对于magage.py的路径
+    image_path - 图像路径，为相对于static/blog/images/的路径
     """
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)  # 外键-博客（新闻）
     image_path = models.CharField(max_length=50)  # 图像路径
+
+    def __str__(self):
+        return f"{str(self.blog)} | {self.image_path}"
 
 
 class Comment(models.Model):
@@ -46,3 +49,6 @@ class Comment(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     user_id = models.CharField(max_length=50)
     comment_content = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return f"{str(self.blog)} | comment from {self.user_id}"
