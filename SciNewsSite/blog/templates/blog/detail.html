@@ -22,7 +22,7 @@
         <section id="mainContent">
             <h1 id="blog_title">{{ blog.title }}</h1>
             <div id="blog_info">
-                <span id="pub_date">{{blog.create_time}}</span>
+                <span id="pub_date">{{ blog.create_time }}</span>
                 <span id="author_name">{{ blog.author_id }}</span>
             </div>
 
@@ -38,7 +38,7 @@
             </div>
             <div id="otherImage">
                 {% for image in images %}
-                <img src="/static/blog/images/{{ image.image_path }}" alt=""/>
+                    <img src="/static/blog/images/{{ image.image_path }}" alt=""/>
                 {% endfor %}
             </div>
 
@@ -63,10 +63,10 @@
                     <input id="comment_submit" type="submit"/>
                 </form>
                 {% for comment in comments %}
-                <div class="user_comment">
-                    <h4>{{ comment.user_id }}</h4>
-                    <span>{{ comment.comment_content }}</span>
-                </div>
+                    <div class="user_comment">
+                        <h4>{{ comment.user_id }}</h4>
+                        <span>{{ comment.comment_content }}</span>
+                    </div>
                 {% endfor %}
             </div>
         </section>

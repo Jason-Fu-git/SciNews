@@ -1,10 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
+{% load static %}
+{% load dicFilter %}
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>新闻列表</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/listStyle.css' %}">
+    <script src="http://use.edgefonts.net/montserrat:n4:default;source-sans-pro:n2:default.js"
+            type="text/javascript"></script>
 </head>
-<body>
 
+<body>
+<div id="mainwrapper">
+    <header>
+        <div id="logo">SciNews</div>
+        <nav><a href="#" title="Link">首页</a> <a href="#" title="Link">列表</a><a href="#" title="Link">分类</a></nav>
+    </header>
+    <div id="content">
+        <section id="mainContent">
+            <h1>新闻列表</h1>
+            <table id="content_table">
+                <thead id="table_head">
+                <th width="65%">新闻</th>
+                <th width="10%">作者</th>
+                <th width="5%">阅读量</th>
+                <th width="5%">评论数</th>
+                <th>发布时间</th>
+                </thead>
+                <tbody id="table_body">
+                {% for blog in page_obj %}
+                    <tr>
+                        <td class="c_title"><a
+                                href="{% url 'blog:detail' blog.id %}">{{ blog.title }}</a>
+                            <span><br>{{ text_dic|key:blog.id  }}</span></td>
+                        <td class="c_author">{{ blog.author_id }}</td>
+                        <td class="c_read_num">{{ blog.read_num }}</td>
+                        <td class="c_comment_num">{{ comment_num_dic|key:blog.id }}</td>
+                        <td class="c_time">{{ blog.create_time }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+
+            <div id="button_area">
+                <!-- 页码按钮导航 -->
+                {% if page_obj.has_previous %}
+                    <a id="former_page" href="%3Fpage={{ page_obj.previous_page_number }}">上一页</a>
+                {% endif %}
+
+                <!-- 当前页为首页 -->
+                {% if page_obj.number == 1 %}
+                    <a class="this_page" href='%3Fpage=1'>1</a>
+                    {% if paginator.num_pages > 3 %}
+                        <a class="page_button" href='%3Fpage=2'>2</a>
+                        <a class="page_button" href="%3Fpage=3">3</a>
+                        <a class="dots">...</a>
+                        <a class="page_button"
+                           href="%3Fpage={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+                    {% elif paginator.num_pages == 3 %}
+                        <a class="page_button" href="%3Fpage=2">2</a>
+                        <a class="page_button" href="%3Fpage=3">3</a>
+                    {% else %}
+                        <a class="page_button" href="%3Fpage=2">2</a>
+                    {% endif %}
+
+                    <!-- 当前页为尾页 -->
+                {% elif page_obj.number == paginator.num_pages %}
+                    <a class="page_button" href="%3Fpage=1">1</a>
+                    <a class="dots">...</a>
+                    <a class="page_button"
+                       href="%3Fpage={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+
+                    <!-- 当前页为中间页 -->
+                {% else %}
+
+                    <!-- 前页不是1，添加省略号 -->
+                    {% if page_obj.previous_page_number != 1 %}
+                        <a class="page_button" href="%3Fpage=1">1</a>
+                        <a class="dots">...</a>
+                    {% endif %}
+
+
+                    <a class="page_button"
+                       href="%3Fpage={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                    <a class="this_page" href="%3Fpage={{ page_obj.number }}">{{ page_obj.number }}</a>
+                    <a class="page_button"
+                       href="%3Fpage={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+
+                    <!-- 后页不是尾页，添加省略号 -->
+                    {% if page_obj.next_page_number != paginator.num_pages %}
+                        <a class="dots">...</a>
+                        <a class="page_button"
+                           href="%3Fpage={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if page_obj.has_next %}
+                    <a id="latter_page" href="%3Fpage={{ page_obj.next_page_number }}">下一页</a>
+                {% endif %}
+
+
+            </div>
+            <div id="input_area">
+                <form id="number_form" method="post" action="{% url 'blog:list_to' %}">
+                    {% csrf_token %}
+                    <a id="page_label">page:</a>
+                    <input id="page_number" name="page_number" type="number" value="{{ page_obj.number }}">
+                    <input id="submit_button" type="submit" value="GO">
+                </form>
+            </div>
+        </section>
+        <footer>
+
+        </footer>
+    </div>
+    <div id="footerbar"></div>
+</div>
 </body>
 </html>

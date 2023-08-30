@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+{% load static %}
+{% load dicFilter %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/indexStyle.css' %}">
+    <script src="http://use.edgefonts.net/montserrat:n4:default;source-sans-pro:n2:default.js"
+            type="text/javascript"></script>
+</head>
+
+<body>
+<div id="mainwrapper">
+    <header>
+        <div id="logo">SciNews</div>
+        <nav><a href="#" title="Link">首页</a> <a href="#" title="Link">列表</a><a href="#" title="Link">分类</a></nav>
+    </header>
+    <div id="content">
+        <section id="mainContent">
+            <h1>首页</h1>
+            <div id="search_area">
+                <form id="search_form" method="post" action="{% url 'blog:search_submit' %}">
+                    {% csrf_token %}
+                    <input maxlength="50" id="search_input" name="search_input">
+                    <input id="submit_btn" type="submit" name="submit_btn" value="搜索">
+                    <div id="area_wrapper">
+                        <fieldset id="radio_area">
+                            <legend>请选择排序依据</legend>
+                            <div>
+                                <input type="radio" id="order_by_time" name="order_group" value="1" checked>
+                                <label>按时间排序</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="order_by_hot" name="order_group" value="2">
+                                <label>按热度排序</label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset id="check_box_area">
+                            <legend>请选择分类依据</legend>
+                            <fieldset id="check_box_area_1">
+                                <legend>新闻来源</legend>
+                                <div>
+                                    <input type="checkbox" id="from_163" name="from_checkbox" value="1">
+                                    <label>网易新闻</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="from_sino" name="from_checkbox" value="2">
+                                    <label>新浪新闻</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="from_ithome" name="from_checkbox" value="3">
+                                    <label>IT之家</label>
+                                </div>
+                            </fieldset>
+
+                            <fieldset id="check_box_area_2">
+                                <legend>发布时间</legend>
+                                <div>
+                                    <input type="checkbox" id="last_3_months" name="time_checkbox" value="1">
+                                    <label>近三月</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="last_year" name="time_checkbox" value="2">
+                                    <label>近一年</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="earlier" name="time_checkbox" value="3">
+                                    <label>更早</label>
+                                </div>
+                            </fieldset>
+
+                            <fieldset id="check_box_area_3">
+                                <legend>内容类型</legend>
+                            </fieldset>
+                        </fieldset>
+                    </div>
+
+                </form>
+            </div>
+            <a id="refresh" href="{% url 'blog:index' %}"><img src="{% static 'blog/images/refresh.png' %}" alt="">换一批</a>
+            <table id="content_table">
+                <thead id="table_head">
+                <th width="70%">新闻</th>
+                <th width="10%">作者</th>
+                <th width="5%">阅读量</th>
+                <th width="5%">评论数</th>
+                <th>时间</th>
+                </thead>
+                <tbody id="table_body">
+                {% for blog in blogs %}
+                    <tr>
+                        <td class="c_title"><a
+                                href="{% url 'blog:detail' blog.id %}">{{ blog.title }}</a>
+                            <span><br>{{ text_dic|key:blog.id  }}</span></td>
+                        <td class="c_author">{{ blog.author_id }}</td>
+                        <td class="c_read_num">{{ blog.read_num }}</td>
+                        <td class="c_comment_num">{{ comment_num_dic|key:blog.id }}</td>
+                        <td class="c_time">{{ blog.create_time }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+
+
+        </section>
+        <footer>
+
+        </footer>
+    </div>
+    <div id="footerbar"></div>
+</div>
+</body>
+</html>

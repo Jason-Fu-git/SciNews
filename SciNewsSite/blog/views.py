@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.views import generic
 from .models import Blog, Comment, Image
@@ -14,13 +14,13 @@ class DetailView(generic.DetailView):
     def get_queryset(self):
         self.blog = get_object_or_404(Blog, id=self.kwargs['pk'])  # 获取blog
         self.blog.read_num += 1  # 阅读量加1 （初始化时）
-        self.blog.save()
+        self.blog.save()  # 保存更改
         return Blog.objects.filter(id=self.kwargs['pk'])
 
     def get(self, request, *args, **kwargs):
         if self.blog is not None:  # 如果已经初始化就加一
             self.blog.read_num += 1
-            self.blog.save()
+            self.blog.save()  # 保存更改
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -60,3 +60,90 @@ def submit_commet(request, blog_id):
         comment = Comment(user_id=user_name, comment_content=comment_content, blog_id=blog.id)
         comment.save()
         return HttpResponseRedirect(reverse('blog:detail', kwargs={'pk': blog_id}))  # 重定向回详情页
+
+
+class ListView(generic.ListView):
+    """新闻列表视图"""
+    model = Blog
+    template_name = 'blog/list.html'
+    context_object_name = 'blogs'
+    paginate_by = 20  # 每页中对象数量
+
+    def get_queryset(self):
+        """获取新闻列表"""
+        return Blog.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(ListView, self).get_context_data(**kwargs)
+
+        #  获取评论数量
+        comment_num_dic = {}
+        for blog in context['blogs']:
+            comment_num_dic[blog.id] = blog.comment_set.all().count()
+        context['comment_num_dic'] = comment_num_dic
+
+        # 获取正文前50个字符
+        text_dic = {}
+        for blog in context['blogs']:
+            if len(blog.text) > 50:
+                text_dic[blog.id] = blog.text[:50] + '...'
+            else:
+                text_dic[blog.id] = blog.text
+        context['text_dic'] = text_dic
+
+        return context
+
+
+def to_page(request):
+    """跳转至指定页面函数"""
+    try:
+        page = int(request.POST['page_number'])  # 获取页码
+    except Exception as e:
+        print(e)
+        raise Http404('页面不存在')  # 抛出404错误
+    else:
+        return HttpResponseRedirect(reverse('blog:list_query', kwargs={'page': page}))  # 重定向回列表页
+
+
+class IndexView(generic.ListView):
+    model = Blog
+    template_name = 'blog/index.html'
+    context_object_name = "blogs"
+
+    def get_queryset(self):
+        if Blog.objects.all().count() < 20:
+            return Blog.objects.all()
+        return Blog.objects.all().order_by('?')[:20]
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+
+        #  获取评论数量
+        comment_num_dic = {}
+        for blog in context['blogs']:
+            comment_num_dic[blog.id] = blog.comment_set.all().count()
+        context['comment_num_dic'] = comment_num_dic
+
+        # 获取正文前50个字符
+        text_dic = {}
+        for blog in context['blogs']:
+            if len(blog.text) > 50:
+                text_dic[blog.id] = blog.text[:50] + '...'
+            else:
+                text_dic[blog.id] = blog.text
+        context['text_dic'] = text_dic
+
+        return context
+
+
+def on_search_submit(request):
+    """处理首页搜索框提交的函数"""
+    try:
+        search_text = request.POST['search_input']
+        order_choice = request.POST['order_group']
+        from_choice = request.POST.getlist('from_checkbox')
+        time_choice = request.POST.getlist('time_checkbox')
+    except Exception as e:
+        print(e)
+    else:
+        print(search_text, order_choice, from_choice, time_choice)
