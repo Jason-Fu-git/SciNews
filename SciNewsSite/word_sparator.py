@@ -16,7 +16,7 @@ def separate():
         punctuation_set = {"，", "。", "？", "！", "：", "、", "；", "“", "”", "（", "）", "《", "》", "【", "】", ",", ".", "?",
                            "!",
                            ":",
-                           ";", "“", "”", "(", ")", "<", ">", "[", "]"}  # 常见标点列表
+                           ";", "“", "”", "(", ")", "<", ">", "[", "]"}  # 常见标点列表（停用词）
 
         # 分词
         seg_list = set(jieba.cut_for_search(blog.title)).union(set(jieba.cut_for_search(blog.text))).difference(
@@ -47,5 +47,3 @@ def order():
         word.save()
         dic_id += 1
         print(dic_id)
-
-

@@ -1,15 +1,15 @@
 import os
+import re
 import sys
 
 import django
-import re
 import requests
 from bs4 import BeautifulSoup
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "SciNewsSite.settings")
 django.setup()
 
-from blog.models import Blog, Image, Comment
+from blog.models import Blog, Image
 from datetime import datetime
 
 headers = {

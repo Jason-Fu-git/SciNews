@@ -49,7 +49,7 @@ header nav a {
 #mainContent {
     float: left;
     padding-top: 41px;
-    padding-right: 0px;
+    padding-right: 0;
 }
 
 #mainwrapper {
@@ -83,7 +83,7 @@ footer {
 
 #mainContent {
     /* Container for the blog post */
-    padding-top: 0px;
+    padding-top: 0;
     float: none;
     width: 96%;
 }

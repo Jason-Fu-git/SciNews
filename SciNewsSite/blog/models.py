@@ -21,13 +21,14 @@ class Blog(models.Model):
     fans = models.IntegerField(default=0)  # 粉丝数，基本上都没有
     create_time = models.DateTimeField(blank=True)  # 创建时间
     read_num = models.IntegerField(default=0)  # 阅读量，基本上都没有
-    likes = models.IntegerField(default=0)  # 点赞数，需动态获取
+    likes = models.IntegerField(default=0)  # 点赞数，基本上都没有
     text = models.TextField(blank=True)  # 正文文字
+    theme = models.CharField(max_length=20, default="")  # 主题
 
     def get_time_category(self):
         """
         获取时间分类
-        :return: 时间分类： 1 - 近三月 | 2 - 近一年（不包括近三月） | 3 - 更早
+        :return: 时间分类： 1 - 近三月 | 2 - 近一年（不包括近三月） | 3 - 一年前
         """
         now = datetime.now()
         if (now - self.create_time).days <= 90:
@@ -59,10 +60,12 @@ class Comment(models.Model):
     blog - 关联的blog的id
     user_id - 用户名
     comment_content - 评论内容，非空
+    发表时间自动填充，不可修改
     """
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     user_id = models.CharField(max_length=50)
     comment_content = models.CharField(max_length=1000)
+    create_time = models.DateTimeField(auto_now_add=True)  # 创建时间,自动填充
 
     def __str__(self):
         return f"{str(self.blog)} | comment from {self.user_id}"

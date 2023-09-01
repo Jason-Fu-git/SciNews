@@ -66,13 +66,6 @@ header nav a {
     width: 100%;
 }
 
-footer {
-    /* Container for footer artices */
-    width: 71%;
-    padding-left: 2%;
-    padding-right: 2%;
-}
-
 
 #mainwrapper header nav a {
     /* Links in header */
@@ -124,14 +117,6 @@ footer {
 }
 
 
-#mainContent #refresh {
-    font-weight: 300;
-    text-decoration: none;
-    color: rgba(40, 40, 40, 1);
-    margin-left: 90%;
-    margin-bottom: 20px;
-}
-
 #mainContent img {
     height: 20px;
     object-fit: contain;
@@ -143,7 +128,7 @@ footer {
     padding: 10px;
     width: 70%;
     margin-left: 15%;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     text-align: center;
     font-size: 13px;
 }
@@ -203,7 +188,63 @@ footer {
     height: 25px;
 }
 
+#search_data span {
+    font-size: 15px;
+    font-weight: 300;
+}
 
 
+#number_form, #button_area {
+    margin-bottom: 20px;
+    text-align: center;
+}
 
+#former_page, #latter_page, #submit_button {
+    background-color: #2D9AB7;
+    border: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: white;
+    font-weight: 600;
+    border-radius: 2px;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-decoration: none;
+}
 
+.this_page {
+    margin-left: 5px;
+    margin-right: 5px;
+    text-decoration: none;
+    border: 0;
+    color: white;
+    background-color: #52bad5;
+    border-radius: 2px;
+}
+
+.page_button {
+    margin-left: 5px;
+    margin-right: 5px;
+    text-decoration: none;
+    border-color: #52bad5;
+    border: 0;
+    background: rgba(250, 250, 250, 1);
+    color: #52bad5;
+}
+
+#page_label {
+    font-size: 90%;
+    font-weight: 300;
+    font-family: montserrat, sans-serif;
+}
+
+#class_info {
+    font-weight: 300;
+    margin-top: 20px;
+}
+
+#class_num {
+    margin-left: 10px;
+}
