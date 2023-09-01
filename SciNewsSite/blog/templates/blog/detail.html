@@ -28,13 +28,15 @@
 
             <div id="category">
                 <span id="category_website">{{ blog.website }}</span>
-                <span id="category_time">近一月</span>
+                <span id="category_time">{{ time_cat }}</span>
                 <span id="category_theme">手机</span>
             </div>
 
 
             <div id="body_text">
-                <p>{{ blog.text }}</p>
+                {% for t in content %}
+                    <p>{{ t }}</p>
+                {% endfor %}
             </div>
             <div id="otherImage">
                 {% for image in images %}
@@ -58,14 +60,18 @@
                     {% csrf_token %}
                     <div>用户名：<input id="user_name" name="user_name"/></div>
                     <div>
-                        <textarea id="comment_area" name="comment_area" rows="6" cols="50">请输入您的评论</textarea>
+                        <textarea id="comment_area" name="comment_area" rows="6" cols="50"
+                                  maxlength="1000">请输入您的评论</textarea>
                     </div>
                     <input id="comment_submit" type="submit"/>
                 </form>
                 {% for comment in comments %}
                     <div class="user_comment">
-                        <h4>{{ comment.user_id }}</h4>
-                        <span>{{ comment.comment_content }}</span>
+                        <span class="user_name"
+                              style="font-size: 16px; font-weight: 600; color: rgba(86, 86, 86, 1.00);margin-bottom: 10px;">{{ comment.user_id }}</span>
+                        <br>
+                        <br>
+                        <span class="comment_content">{{ comment.comment_content }}</span>
                     </div>
                 {% endfor %}
             </div>

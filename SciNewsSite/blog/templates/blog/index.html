@@ -26,56 +26,53 @@
                     <input maxlength="50" id="search_input" name="search_input">
                     <input id="submit_btn" type="submit" name="submit_btn" value="搜索">
                     <div id="area_wrapper">
-                        <fieldset id="radio_area">
-                            <legend>请选择排序依据</legend>
-                            <div>
+                        <div id="radio_area">
+                            <a>排序依据: </a>
+                            <label>
                                 <input type="radio" id="order_by_time" name="order_group" value="1" checked>
-                                <label>按时间排序</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="order_by_hot" name="order_group" value="2">
-                                <label>按热度排序</label>
-                            </div>
-                        </fieldset>
+                                <span>按时间排序(由新到旧)</span>
+                            </label>
+                            <label>
+                                <input type="radio" id="order_by_hot" value="2" name="order_group">
+                                <span>按热度排序(由高到低)</span>
+                            </label>
+                        </div>
 
-                        <fieldset id="check_box_area">
-                            <legend>请选择分类依据</legend>
-                            <fieldset id="check_box_area_1">
-                                <legend>新闻来源</legend>
-                                <div>
-                                    <input type="checkbox" id="from_163" name="from_checkbox" value="1">
-                                    <label>网易新闻</label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="from_sino" name="from_checkbox" value="2">
-                                    <label>新浪新闻</label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="from_ithome" name="from_checkbox" value="3">
-                                    <label>IT之家</label>
-                                </div>
-                            </fieldset>
+                        <div id="check_box_area_1">
+                            <a>新闻来源:</a>
+                            <label>
+                                <input type="checkbox" id="from_163" value="1" name="from_checkbox">
+                                <span>网易新闻</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="from_sino" value="2" name="from_checkbox">
+                                <span>新浪新闻</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="from_ithome" value="3" name="from_checkbox">
+                                <span>IT之家</span>
+                            </label>
+                        </div>
 
-                            <fieldset id="check_box_area_2">
-                                <legend>发布时间</legend>
-                                <div>
-                                    <input type="checkbox" id="last_3_months" name="time_checkbox" value="1">
-                                    <label>近三月</label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="last_year" name="time_checkbox" value="2">
-                                    <label>近一年</label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="earlier" name="time_checkbox" value="3">
-                                    <label>更早</label>
-                                </div>
-                            </fieldset>
+                        <div id="check_box_area_2">
+                            <a>发布时间:</a>
+                            <label>
+                                <input type="checkbox" id="last_3_months" value="1" name="time_checkbox">
+                                <span>近三月</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="last_year" value="2" name="time_checkbox">
+                                <span>近一年</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="earlier" value="3" name="time_checkbox">
+                                <span>更早</span>
+                            </label>
+                        </div>
 
-                            <fieldset id="check_box_area_3">
-                                <legend>内容类型</legend>
-                            </fieldset>
-                        </fieldset>
+                        <div id="check_box_area_3">
+                            <a>内容类型:</a>
+                        </div>
                     </div>
 
                 </form>

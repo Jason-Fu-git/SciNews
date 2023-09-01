@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 
@@ -21,6 +23,18 @@ class Blog(models.Model):
     read_num = models.IntegerField(default=0)  # 阅读量，基本上都没有
     likes = models.IntegerField(default=0)  # 点赞数，需动态获取
     text = models.TextField(blank=True)  # 正文文字
+
+    def get_time_category(self):
+        """
+        获取时间分类
+        :return: 时间分类： 1 - 近三月 | 2 - 近一年（不包括近三月） | 3 - 更早
+        """
+        now = datetime.now()
+        if (now - self.create_time).days <= 90:
+            return 1
+        elif (now - self.create_time).days <= 365:
+            return 2
+        return 3
 
     def __str__(self):
         return f"{self.title} | {self.author_id}"
@@ -52,3 +66,20 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{str(self.blog)} | comment from {self.user_id}"
+
+
+class Word(models.Model):
+    """
+    词模型，初始化时必须初始化的变量：
+    blogs - 关联的blog的id，格式为 1,2,3,4
+    word - 词
+    frequency - 词频，默认为0
+    dic_order - 字典序，主键
+    """
+    word = models.CharField(max_length=50)
+    blogs = models.TextField()
+    frequency = models.IntegerField(default=0)
+    dic_order = models.IntegerField(primary_key=True)
+
+    def __str__(self):
+        return f"{str(self.word)} | {self.blogs}"

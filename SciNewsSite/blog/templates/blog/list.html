@@ -62,7 +62,7 @@
                     {% elif paginator.num_pages == 3 %}
                         <a class="page_button" href="%3Fpage=2">2</a>
                         <a class="page_button" href="%3Fpage=3">3</a>
-                    {% else %}
+                    {% elif paginator.num_pages == 2 %}
                         <a class="page_button" href="%3Fpage=2">2</a>
                     {% endif %}
 
