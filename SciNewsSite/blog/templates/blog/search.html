@@ -152,6 +152,9 @@
 
             <!-- 搜索后台信息 -->
             <div id="search_data">
+                {% if cut %}
+                    <span>未找到完全匹配结果，已启用分词匹配  | </span>
+                {% endif %}
                 <span>共 <a id="search_num">{{ search_num }}</a> 条， 用时 <a
                         id="time">{{ search_time_ms }}</a> ms</span>
             </div>

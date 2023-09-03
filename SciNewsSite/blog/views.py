@@ -1,6 +1,7 @@
 import datetime
 import re
 import time
+import jieba
 
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
@@ -182,6 +183,7 @@ class SearchView(generic.ListView):
     paginate_by = 20  # 每页中对象数量
     search_num = 0  # 条目数
     search_time_ms = 0  # 搜索耗时
+    cut = False  # 是否采用分词匹配
 
     def get_queryset(self):
         begin_time = time.time()  # 搜索开始时间戳
@@ -193,15 +195,20 @@ class SearchView(generic.ListView):
             self.time_choice = re.findall('time=([^&]*)', self.kwargs['content'])[0]  # 时间
             self.theme_choice = re.findall('theme=([^&]*)', self.kwargs['content'])[0]  # 主题
 
-            word = Word.objects.get(word=self.search_text)  # 精确匹配
-
-        except Word.DoesNotExist:  # 如果不存在该词条
+            word_qs = Word.objects.filter(word__iexact=self.search_text)  # 精确搜索
+            if word_qs.count() == 0:  # 没有匹配
+                # 尝试分词后再匹配
+                cut_ls = jieba.cut_for_search(self.search_text)  # 分词
+                for word in cut_ls:
+                    word_qs |= Word.objects.filter(word__iexact=word)
+                self.cut = True
+        except Exception as e:  # 如果出现错误
+            print(e)
             end_time = time.time()  # 搜索结束时间戳
             self.search_time_ms = int(round((end_time - begin_time) * 1000))  # 搜索耗时（毫秒）
-
+            return Blog.objects.none()  # 返回空列表
         else:
             # 按照分类筛选
-
             # 来源分类
             website_ls = []
             if '1' in self.from_choice:
@@ -242,10 +249,12 @@ class SearchView(generic.ListView):
             if len(theme_ls) == 0:  # 全部选中
                 theme_ls = ['科技产品', 'AI', '财经', '其他']
 
-            blog_set = Blog.objects.filter(id__in=word.blogs.split(',')).filter(website__in=website_ls).filter(
-                time_q).filter(theme__in=theme_ls)  # 获取符合要求的所有blog
+            blog_set = Blog.objects.none()
+            for word in word_qs:
+                blog_set |= Blog.objects.filter(id__in=word.blogs.split(',')).filter(website__in=website_ls).filter(
+                    time_q).filter(theme__in=theme_ls)  # 获取符合要求的所有blog
 
-            self.search_num = len(blog_set)  # 搜索结果条目数
+            self.search_num = blog_set.count()  # 搜索结果条目数
 
             # 排序
             if self.order_choice == '1':
@@ -291,6 +300,7 @@ class SearchView(generic.ListView):
         context['from_choice'] = self.from_choice.split('+')
         context['time_choice'] = self.time_choice.split('+')
         context['theme_choice'] = self.theme_choice.split('+')
+        context['cut'] = self.cut
 
         return context
 
@@ -357,6 +367,7 @@ class CategoryResult(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context['category'] = self.category  # 分类
         context['sub_category'] = self.sub_category  # 子类
         context['count'] = self.count  # 条目数
@@ -401,7 +412,7 @@ class CategoryView(generic.ListView):
             create_time__gte=datetime.datetime.now() - datetime.timedelta(days=365)).count()  # 近一年
         context['time_3_count'] = Blog.objects.filter(
             create_time__lt=datetime.datetime.now() - datetime.timedelta(days=365)).count()  # 一年前
-        #新闻主题
+        # 新闻主题
         context['theme_1_count'] = Blog.objects.filter(theme='科技产品').count()  # 科技产品
         context['theme_2_count'] = Blog.objects.filter(theme='AI').count()  # AI
         context['theme_3_count'] = Blog.objects.filter(theme='财经').count()  # 财经

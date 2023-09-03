@@ -11,7 +11,7 @@ from blog.models import Blog, Word
 import pandas
 
 
-def extract_keywords(text):
+def extract_keywords():
     # 利用pandas dataframe存储关键词
     df = pandas.DataFrame(columns=["kw", 'weight', 'blog_id'])
 
@@ -19,16 +19,16 @@ def extract_keywords(text):
         text = blog.text
 
         # 关键词提取
-        tags = jieba.analyse.extract_tags(text, topK=2, withWeight=True)
-        if len(tags) == 2:  # 存在有的文章较短的情况
-            tags[0] += (blog.id,)
-            tags[1] += (blog.id,)
+        tags = jieba.analyse.extract_tags(text, topK=7, withWeight=True)
+        if len(tags) == 7:  # 存在有的文章较短的情况
+            for i in range(7):
+                tags[i] += (blog.id,)
 
             # pandas 存储关键词
             temp = pandas.DataFrame(tags, columns=["kw", 'weight', 'blog_id'])
             df = df.append(temp, ignore_index=True)
 
-            print("complete: ", blog.id)
+        print("complete: ", blog.id)
 
     df.to_csv("keywords.csv", index=False)
     print('success!')
@@ -39,7 +39,8 @@ def blog_theme_classify():
     product_ls = ['手机', '华为', '三星', '荣耀', '小米', '微软', 'GB', 'TB', '处理器', 'CPU', 'GPU', '英伟达',
                   '英特尔', 'intel', 'nvidia', '内存', 'huawei', 'galaxy', 'microsoft', '苹果', 'apple', 'arm', '产品',
                   '软件', '硬件']
-    ai_ls = ["AI", "ChatGPT", "人工智能", "文心", '大模型', 'NLP', 'GPT', 'Transformer', 'chatgpt', '机器学习', '深度学习']
+    ai_ls = ["AI", "ChatGPT", "人工智能", "文心", '大模型', 'NLP', 'GPT', 'Transformer', 'chatgpt', '机器学习',
+             '深度学习']
     finance_ls = ['股票', '基金', '期货', '上涨', '下跌', '业务', '收入', '股市', '金融', '财经']
 
     # 顺序不能改变
@@ -93,4 +94,4 @@ def blog_theme_classify():
     print('其他类分类完成！')
 
 
-
+extract_keywords()
