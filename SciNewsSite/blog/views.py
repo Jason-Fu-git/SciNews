@@ -118,6 +118,8 @@ def list_to_page(request):
     """列表页跳转至指定页面函数"""
     try:
         page = int(request.POST['page_number'])  # 获取页码
+        if page <= 0:
+            raise Http404('页面不存在')
     except Exception as e:
         print(e)
         raise Http404('页面不存在')  # 抛出404错误
@@ -134,7 +136,7 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         if Blog.objects.all().count() < 20:  # 小于20条，返回全部
             return Blog.objects.all()
-        return Blog.objects.all().order_by('?')[:20]
+        return Blog.objects.all().order_by('?')[:20]  # 随机排序
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -184,6 +186,11 @@ class SearchView(generic.ListView):
     search_num = 0  # 条目数
     search_time_ms = 0  # 搜索耗时
     cut = False  # 是否采用分词匹配
+    search_text = ""
+    order_choice = ""
+    from_choice = ""
+    time_choice = ""
+    theme_choice = ""
 
     def get_queryset(self):
         begin_time = time.time()  # 搜索开始时间戳
@@ -309,6 +316,8 @@ def search_to_page(request, content):
     """搜索页跳转至指定页面函数"""
     try:
         page = int(request.POST['page_number'])  # 获取页码
+        if page <= 0:
+            raise Http404('页面不存在')
     except Exception as e:
         print(e)
         raise Http404('页面不存在')  # 抛出404错误
@@ -381,6 +390,8 @@ def category_to_page(request, category, sub_id):
     """分类结果页跳转至指定页面函数"""
     try:
         page = int(request.POST['page_number'])  # 获取页码
+        if page <= 0:
+            raise Http404('页面不存在')
     except Exception as e:
         print(e)
         raise Http404('页面不存在')  # 抛出404错误

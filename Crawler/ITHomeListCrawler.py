@@ -6,6 +6,7 @@ from datetime import date, timedelta
 """
 IT之家新闻列表获取
 作者：付甲申
+运行须知：“../data/”文件夹务必存在
 """
 
 # 设置header

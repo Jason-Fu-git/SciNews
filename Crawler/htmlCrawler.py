@@ -6,6 +6,8 @@ import os
 """
 html文件爬取
 作者：付甲申
+运行须知："../data/sino_urls.txt",  "../data/itHome_urls.txt", "../data/163_urls.txt" 三个文件务必存在
+"../data/htmls/sino","../data/htmls/163","../data/htmls/itHome" 三个路径务必存在
 """
 
 # 按照获取的url列表获取html文件
