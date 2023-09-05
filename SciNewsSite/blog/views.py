@@ -203,12 +203,22 @@ class SearchView(generic.ListView):
             self.theme_choice = re.findall('theme=([^&]*)', self.kwargs['content'])[0]  # 主题
 
             word_qs = Word.objects.filter(word__iexact=self.search_text)  # 精确搜索
+            blog_set = Blog.objects.none()
             if word_qs.count() == 0:  # 没有匹配
-                # 尝试分词后再匹配
-                cut_ls = jieba.cut_for_search(self.search_text)  # 分词
-                for word in cut_ls:
-                    word_qs |= Word.objects.filter(word__iexact=word)
-                self.cut = True
+                # 尝试全文匹配
+                blog_set |= (Blog.objects.filter(title__icontains=self.search_text) | Blog.objects.filter(
+                    text__icontains=self.search_text))
+                if blog_set.count() == 0:
+                    # 完全匹配失败，尝试分词后再匹配
+                    cut_ls = jieba.cut_for_search(self.search_text)  # 分词
+                    for word in cut_ls:
+                        word_qs |= Word.objects.filter(word__iexact=word)
+                    for word in word_qs:
+                        blog_set |= Blog.objects.filter(id__in=word.blogs.split(','))
+                    self.cut = True
+            else:
+                for word in word_qs:
+                    blog_set |= Blog.objects.filter(id__in=word.blogs.split(','))
         except Exception as e:  # 如果出现错误
             print(e)
             end_time = time.time()  # 搜索结束时间戳
@@ -256,10 +266,8 @@ class SearchView(generic.ListView):
             if len(theme_ls) == 0:  # 全部选中
                 theme_ls = ['科技产品', 'AI', '财经', '其他']
 
-            blog_set = Blog.objects.none()
-            for word in word_qs:
-                blog_set |= Blog.objects.filter(id__in=word.blogs.split(',')).filter(website__in=website_ls).filter(
-                    time_q).filter(theme__in=theme_ls)  # 获取符合要求的所有blog
+            blog_set = blog_set.filter(website__in=website_ls).filter(
+                time_q).filter(theme__in=theme_ls)  # 获取符合要求的所有blog
 
             self.search_num = blog_set.count()  # 搜索结果条目数
 
